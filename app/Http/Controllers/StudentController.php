@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\StudentCollection;
+use App\Http\Resources\StudentResource;
 use App\Models\Student;
 use Illuminate\Http\Request;
 
@@ -23,8 +24,19 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        return "hola desde controller";
+        //Store a new student
+        //$student = new Student;
+        //$student->name      = $request->name;
+        //$student->birthDate = '1999-06-09';
+        //$student->phone     = $request->phone;
+        //$student->homework  = $request->homework;
+        //$student->progress  = $request->progress;
+        //$student->color_id  = $request->color;
+        //$student->level_id  = $request->level;
+        //$student->save();
+
+        print_r($request);
+        return ;
     }
 
     /**
@@ -32,7 +44,9 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        //
+        $student->load(['level', 'color']);
+        
+        return new StudentResource($student);
     }
 
     /**

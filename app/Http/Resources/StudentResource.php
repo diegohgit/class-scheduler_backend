@@ -14,11 +14,24 @@ class StudentResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        //Return only necessary information to show in a table or list
+        if($request->routeIs('students.index')){
+            return [
+                'id'    => $this->id,
+                'name'  => $this->name,
+                'level' => $this->level->name,
+            ];
+        }
+
+        //the other case is students.show and it need more information
         return [
-            'id' => $this->id,
+            'id'   => $this->id,
             'name' => $this->name,
-            'level' => $this->level->name,
-            'color' => $this->color->name
+            'birthdate' => $this->birthdate?->format('m/d/Y'),
+            'homework'  => $this->homework,
+            'progress'  => $this->progress,
+            'level' => $this->level->id,
+            'color' => (string) $this->color->id
         ];
     }
 }
