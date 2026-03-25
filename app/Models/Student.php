@@ -26,4 +26,8 @@ class Student extends Model
     {
         return $this->belongsTo(Color::class);
     }
+
+    public function scopeSearchByName($query, $name){
+        return $query->where('name', 'LIKE', "%{$name}%");
+    }
 }

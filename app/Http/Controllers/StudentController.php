@@ -12,10 +12,17 @@ class StudentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //return response()->json(['students' => Student::all()]);
-        return new StudentCollection(Student::with(['level', 'color'])->get());
+        //When $request contains 'search'
+        //runs a callback function wich runs the search function from model
+        //if 'search' is not included, returns the full list of students.
+        $students = Student::with(['level', 'color'])
+                            ->when( $request->search,
+                                    fn($q) => $q->searchByName($request->search))
+                            ->get();
+        
+        return new StudentCollection($students);
     }
 
 
