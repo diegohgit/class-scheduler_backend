@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StudentClassRequest;
 use App\Models\StudentClass;
 use Illuminate\Http\Request;
 
@@ -25,10 +26,13 @@ class StudentClassController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StudentClassRequest $request)
     {
-        //
+        //$request is an instance of StudentClassRequest so we can run the validation rules.
+        $studentClass = StudentClass::create($request->validated());
+        return response()->json($studentClass, 201);
     }
+
 
     /**
      * Display the specified resource.
