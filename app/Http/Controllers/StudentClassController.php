@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StudentClassRequest;
+use App\Http\Resources\StudentClassResource;
 use App\Models\StudentClass;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,8 @@ class StudentClassController extends Controller
      */
     public function index()
     {
+        $studentClasses = StudentClass::with(['student.color'])->get();
+        return response()->json(StudentClassResource::collection($studentClasses));
     }
 
     /**

@@ -16,6 +16,12 @@ class StudentClass extends Model
                             'ends'
                             ];
 
+    //Add format H:i to time data because it returns 00:00:00 by default.
+    protected $casts = [
+        'starts' => 'datetime:H:i',
+        'ends'   => 'datetime:H:i',
+    ];
+
     public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);
