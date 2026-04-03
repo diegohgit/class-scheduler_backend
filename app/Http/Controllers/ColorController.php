@@ -12,7 +12,8 @@ class ColorController extends Controller
      */
     public function index()
     {
-        //
+        $colors = Color::select('id', 'name')->get();
+        return response()->json($colors);
     }
 
     /**
