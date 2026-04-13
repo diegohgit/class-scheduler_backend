@@ -30,8 +30,8 @@ class StudentResource extends JsonResource
             'birthdate' => $this->birthdate?->format('m/d/Y'),
             'homework'  => $this->homework,
             'progress'  => $this->progress,
-            'level' => $this->level->id,
-            'color' => (string) $this->color->id
+            'level_id'  => $this->level->id,
+            'color_id'  => $this->color->id
         ];
     }
 }

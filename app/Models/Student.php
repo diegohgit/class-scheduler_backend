@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Student extends Model
 {
+    protected $fillable = [ 'name',
+                            'birthdate',
+                            'phone',
+                            'homework',
+                            'progress',
+                            'color_id',
+                            'level_id',
+                        ];
+
     //Use $casts to convert database values into specific types
     protected $casts =[
         //in this case we convert birthdate to date (it comes from DB as String)

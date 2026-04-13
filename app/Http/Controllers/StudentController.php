@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StudentRequest;
 use App\Http\Resources\StudentCollection;
 use App\Http\Resources\StudentResource;
 use App\Models\Student;
@@ -29,21 +30,12 @@ class StudentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StudentRequest $request)
     {
-        //Store a new student
-        //$student = new Student;
-        //$student->name      = $request->name;
-        //$student->birthDate = '1999-06-09';
-        //$student->phone     = $request->phone;
-        //$student->homework  = $request->homework;
-        //$student->progress  = $request->progress;
-        //$student->color_id  = $request->color;
-        //$student->level_id  = $request->level;
-        //$student->save();
+        $validated = $request->validated();
+        $student   = Student::create($validated);
 
-        print_r($request);
-        return ;
+        return response()->json($student->id, 201);
     }
 
     /**
@@ -67,9 +59,14 @@ class StudentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Student $student)
-    {
-        //
+    public function update(StudentRequest $request, $id)
+    {    
+        $validated = $request->validated();
+        $student = Student::findOrFail($id);
+        //Update validated data.
+        $student->update($validated);
+    
+        return response()->json($student->id, 200);
     }
 
     /**
