@@ -24,7 +24,7 @@ class StudentClassRequest extends FormRequest{
         //This callback will be executed after the rules validation.
         $validator->after(function($v){
 
-            $id = $this->route('id');
+            $id = $this->route('student_class');
 
             $v = StudentClass::validateNoOverlap(
                 $this->day_id,
