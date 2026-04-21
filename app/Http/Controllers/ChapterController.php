@@ -12,7 +12,8 @@ class ChapterController extends Controller
      */
     public function index()
     {
-        //
+        $chapters = Chapter::get(['id', 'name']);
+        return $chapters;
     }
 
     /**
