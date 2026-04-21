@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\StudentClassController;
 use App\Http\Controllers\StudentController;
@@ -13,3 +15,4 @@ Route::get('/user', function (Request $request) {
 Route::apiResource('/students', StudentController::class);
 Route::apiResource('/student_classes', StudentClassController::class);
 Route::apiResource('/colors', ColorController::class);
+Route::apiResource('/chapters', ChapterController::class);
