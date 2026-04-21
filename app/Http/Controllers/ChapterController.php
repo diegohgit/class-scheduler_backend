@@ -54,9 +54,14 @@ class ChapterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Chapter $chapter)
+    public function update(Request $request, $id)
     {
-        //
+        $validated = $request->validate([ 'name'=> 'required|max:150|unique:chapters,name' ]);
+
+        $chapter = Chapter::findOrFail($id);
+        $chapter->update($validated);
+
+        return response()->json($chapter->id, 201);
     }
 
     /**
