@@ -28,8 +28,9 @@ class SectionController extends Controller
      */
     public function store(Request $request)
     {
+        //This validations must match with validations included in update() method
         $validated = $request->validate([ 'name'       => 'required|max:150',
-                                          'chapter_id' => 'required|gt:0|',]);
+                                          'chapter_id' => 'required|integer|exists:chapters,id',]);
 
         $section = Section::create([ 'name'       => $validated['name'], 
                                      'chapter_id' => $validated['chapter_id']]);
@@ -56,9 +57,16 @@ class SectionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Section $section)
+    public function update(Request $request, $id)
     {
-        //
+        //This validations must match with validations included in store() method
+        $validated = $request->validate([ 'name'       => 'required|max:150',
+                                          'chapter_id' => 'required|integer|exists:chapters,id',]);
+
+        $section = Section::findOrFail($id);
+        $section->update($validated);
+
+        return response()->json($section->id, 201);
     }
 
     /**
