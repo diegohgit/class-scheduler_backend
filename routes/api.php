@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ColorController;
+use App\Http\Controllers\SectionController;
 use App\Http\Controllers\StudentClassController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Http\Request;
@@ -16,3 +17,4 @@ Route::apiResource('/students', StudentController::class);
 Route::apiResource('/student_classes', StudentClassController::class);
 Route::apiResource('/colors', ColorController::class);
 Route::apiResource('/chapters', ChapterController::class);
+Route::apiResource('/sections', SectionController::class);
