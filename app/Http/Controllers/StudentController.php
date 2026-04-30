@@ -22,7 +22,7 @@ class StudentController extends Controller
                             ->when( $request->search,
                                     fn($q) => $q->searchByName($request->search))
                             ->get();
-        
+
         return new StudentCollection($students);
     }
 
@@ -38,13 +38,42 @@ class StudentController extends Controller
         return response()->json($student->id, 201);
     }
 
+
+    public function markAsSeen(Request $request, $id){
+
+        $request->validate(['student_id' => ['required', 'integer', 'exists:students,id',],
+                            'section_id' => ['required', 'integer', 'exists:sections,id',],]);
+
+        try{
+            //Check if the student_id from $request is the same
+            //as the student_id from url.
+            if($id === $request->student_id) $student = Student::find($id);
+            else throw new \Exception("Incorrect data.");
+
+            //Attach() doesn't validate whether the student_id-section_id
+            //already exists, but if it does it'll trigger an error/
+            //because section_student table has a composite PK
+            //made of 'student_id'+'section_id'.
+            $student->sections()->attach([$request->section_id => ['seen_date' => now()]]);
+
+            $response = "Section marked as seen.";
+
+        }catch(\Illuminate\Database\QueryException $e){
+            $response = $e->getCode() === "23000" ? "This section was already marked as seen."
+                                                  : "An error has occurred.";
+        }
+
+        return response()->json(["message" => $response], );
+    }
+
+
     /**
      * Display the specified resource.
      */
     public function show(Student $student)
     {
         $student->load(['level', 'color']);
-        
+
         return new StudentResource($student);
     }
 
@@ -65,7 +94,7 @@ class StudentController extends Controller
         $student = Student::findOrFail($id);
         //Update validated data.
         $student->update($validated);
-    
+
         return response()->json($student->id, 200);
     }
 

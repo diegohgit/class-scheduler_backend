@@ -18,3 +18,6 @@ Route::apiResource('/student_classes', StudentClassController::class);
 Route::apiResource('/colors', ColorController::class);
 Route::apiResource('/chapters', ChapterController::class);
 Route::apiResource('/sections', SectionController::class);
+
+//Route::get('/students/{student}/progress',  [StudentController::class, 'getProgress']);
+Route::post('/students/{student}/progress', [StudentController::class, 'markAsSeen']);
