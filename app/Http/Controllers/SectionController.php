@@ -34,8 +34,7 @@ class SectionController extends Controller
 
         $section = Section::create([ 'name'       => $validated['name'], 
                                      'chapter_id' => $validated['chapter_id']]);
-        return response()->json($section->id, 201);
-
+        return response()->json(['success' => true], 201);
     }
 
     /**
@@ -66,7 +65,7 @@ class SectionController extends Controller
         $section = Section::findOrFail($id);
         $section->update($validated);
 
-        return response()->json($section->id, 201);
+        return response()->json(['success' => true], 200);
     }
 
     /**
