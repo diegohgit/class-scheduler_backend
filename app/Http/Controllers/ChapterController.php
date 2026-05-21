@@ -34,8 +34,8 @@ class ChapterController extends Controller
     {
         $validated = $request->validate([ 'name'=> 'required|max:150|unique:chapters,name' ]);
 
-        $chapter = Chapter::create([ "name" => $validated['name'] ]);
-        return response()->json($chapter->id, 201);
+        Chapter::create([ "name" => $validated['name'] ]);
+        return response()->json(['success' => true], 201);
     }
 
     /**
@@ -57,14 +57,15 @@ class ChapterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
-        $validated = $request->validate([ 'name'=> 'required|max:150|unique:chapters,name' ]);
+        //$id at the end is to tell Laravel to ignore it during the uniqueness check.
+        $validated = $request->validate(['name'=>'required|max:150|unique:chapters,name,'.$id]);
 
         $chapter = Chapter::findOrFail($id);
         $chapter->update($validated);
 
-        return response()->json($chapter->id, 201);
+        return response()->json(['success' => true], 200);
     }
 
     /**
