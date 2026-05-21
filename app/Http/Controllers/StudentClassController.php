@@ -31,8 +31,8 @@ class StudentClassController extends Controller
      */
     public function store(StudentClassRequest $request)
     {
-        $studentClass = StudentClass::create($request->validated());
-        return response()->json($studentClass, 201);
+        StudentClass::create($request->validated());
+        return response()->json(['success' => true], 201);
     }
 
 
@@ -55,13 +55,13 @@ class StudentClassController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StudentClassRequest $request, $id)
+    public function update(StudentClassRequest $request, int $id)
     {
         $validated = $request->validated();
         $class = StudentClass::findOrFail($id);
         $class->update($validated);
 
-        return response()->json($class->id, 200);
+        return response()->json(['success' => true], 200);
     }
 
     /**
