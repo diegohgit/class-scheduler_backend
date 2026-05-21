@@ -7,6 +7,7 @@ use App\Http\Resources\StudentCollection;
 use App\Http\Resources\StudentResource;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -33,13 +34,13 @@ class StudentController extends Controller
     public function store(StudentRequest $request)
     {
         $validated = $request->validated();
-        $student   = Student::create($validated);
+        Student::create($validated);
 
-        return response()->json($student->id, 201);
+        return response()->json(['success' => true], 201);
     }
 
 
-    public function markAsSeen(Request $request, $id){
+    public function markAsSeen(Request $request, int $id){
 
         $request->validate(['student_id' => ['required', 'integer', 'exists:students,id',],
                             'section_id' => ['required', 'integer', 'exists:sections,id',],]);
@@ -66,6 +67,13 @@ class StudentController extends Controller
         return response()->json(["message" => $response], );
     }
 
+    public function getProgress(int $id){
+        $data = DB::table('section_student')
+                ->where('student_id', $id)
+                ->get(['section_id', 'seen_date']);
+
+        return response()->json($data);
+    }
 
     /**
      * Display the specified resource.
@@ -88,14 +96,14 @@ class StudentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StudentRequest $request, $id)
-    {    
+    public function update(StudentRequest $request, int $id)
+    {
         $validated = $request->validated();
         $student = Student::findOrFail($id);
-        //Update validated data.
+        //Update with validated data.
         $student->update($validated);
 
-        return response()->json($student->id, 200);
+        return response()->json(['success' => true], 200);
     }
 
     /**
