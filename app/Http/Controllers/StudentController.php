@@ -40,7 +40,10 @@ class StudentController extends Controller
     }
 
 
+
     public function markAsSeen(Request $request, int $id){
+
+        $success = false;
 
         $request->validate(['student_id' => ['required', 'integer', 'exists:students,id',],
                             'section_id' => ['required', 'integer', 'exists:sections,id',],]);
@@ -56,7 +59,7 @@ class StudentController extends Controller
             //because section_student table has a composite PK
             //made of 'student_id'+'section_id'.
             $student->sections()->attach([$request->section_id => ['seen_date' => now()]]);
-
+            $success = true;
             $response = "Section marked as seen.";
 
         }catch(\Illuminate\Database\QueryException $e){
@@ -64,9 +67,14 @@ class StudentController extends Controller
                                                   : "An error has occurred.";
         }
 
-        return response()->json(["message" => $response], );
+        return response()->json([ "success" => $success,  
+                                  "message" => $response], );
     }
 
+
+    /**
+     * Filter students progress by student_id.
+     */
     public function getProgress(int $id){
         $data = DB::table('section_student')
                 ->where('student_id', $id)
