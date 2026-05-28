@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StudentRequest;
 use App\Http\Resources\StudentCollection;
 use App\Http\Resources\StudentResource;
+use App\Models\Section;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +42,7 @@ class StudentController extends Controller
 
 
 
-    public function markAsSeen(Request $request, int $id){
+    public function markSection(Request $request, int $id){
 
         $success = false;
 
@@ -82,6 +83,29 @@ class StudentController extends Controller
 
         return response()->json($data);
     }
+
+
+    /**
+     * Remove a section to mark it as not seen.
+     */
+    public function unmarkSection(Student $student, Section $section){
+        
+        //Return error if section->id is missing.
+        if (!$section->id) {
+            return response()->json([
+                "success" => false,
+                "message" => "Invalid section."
+            ], 400);
+        }
+
+        //Detach returns false if nothing could be deleted.
+        $deleted = $student->sections()->detach($section->id);
+
+        return response()->json(["success" => $deleted > 0,
+                                 "message" => $deleted > 0  ? "Section marked as not seen."
+                                                            :  "Couldn't unmark section"]);
+    }
+
 
     /**
      * Display the specified resource.

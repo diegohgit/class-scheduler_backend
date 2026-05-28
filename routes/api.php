@@ -20,4 +20,7 @@ Route::apiResource('/chapters', ChapterController::class);
 Route::apiResource('/sections', SectionController::class);
 
 Route::get('/students/{student}/progress',  [StudentController::class, 'getProgress']);
-Route::post('/students/{student}/progress', [StudentController::class, 'markAsSeen']);
+Route::post('/students/{student}/progress', [StudentController::class, 'markSection']);
+Route::delete('/students/{student}/progress/{section}', 
+              [StudentController::class, 'unmarkSection']
+             );
