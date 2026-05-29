@@ -56,7 +56,7 @@ class SectionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         //This validations must match with validations included in store() method
         $validated = $request->validate([ 'name'       => 'required|max:150',
@@ -73,6 +73,8 @@ class SectionController extends Controller
      */
     public function destroy(Section $section)
     {
-        //
+        $section->delete();
+
+        return response()->json(['success' => true], 200);
     }
 }
