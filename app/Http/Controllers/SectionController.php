@@ -34,7 +34,7 @@ class SectionController extends Controller
 
         $section = Section::create([ 'name'       => $validated['name'], 
                                      'chapter_id' => $validated['chapter_id']]);
-        return response()->json(['success' => true], 201);
+        return response()->json($section);
     }
 
     /**
@@ -63,9 +63,16 @@ class SectionController extends Controller
                                           'chapter_id' => 'required|integer|exists:chapters,id',]);
 
         $section = Section::findOrFail($id);
+
+        $oldChapter = $section->chapter_id !== (int) $request->chapter_id ? $section->chapter_id : null;
+
         $section->update($validated);
 
-        return response()->json(['success' => true], 200);
+        $section =  ["section" => $section,
+                     "id" => $section->id,
+                     "old_chapter" => $oldChapter];
+
+        return response()->json($section);
     }
 
     /**
@@ -75,6 +82,6 @@ class SectionController extends Controller
     {
         $section->delete();
 
-        return response()->json(['success' => true], 200);
+        return response()->json($section);
     }
 }
