@@ -34,8 +34,8 @@ class ChapterController extends Controller
     {
         $validated = $request->validate([ 'name'=> 'required|max:150|unique:chapters,name' ]);
 
-        Chapter::create([ "name" => $validated['name'] ]);
-        return response()->json(['success' => true], 201);
+        $chapter = Chapter::create([ "name" => $validated['name'] ]);
+        return response()->json($chapter, 201);
     }
 
     /**
@@ -65,7 +65,7 @@ class ChapterController extends Controller
         $chapter = Chapter::findOrFail($id);
         $chapter->update($validated);
 
-        return response()->json(['success' => true], 200);
+        return response()->json($chapter, 200);
     }
 
     /**
@@ -73,6 +73,8 @@ class ChapterController extends Controller
      */
     public function destroy(Chapter $chapter)
     {
-        //
+        $chapter->delete();
+
+        return response()->json($chapter);
     }
 }
