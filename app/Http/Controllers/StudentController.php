@@ -44,7 +44,7 @@ class StudentController extends Controller
 
     public function markSection(Request $request, int $id){
 
-        $success = false;
+        $idResponse = false;
 
         $request->validate(['student_id' => ['required', 'integer', 'exists:students,id',],
                             'section_id' => ['required', 'integer', 'exists:sections,id',],]);
@@ -60,15 +60,16 @@ class StudentController extends Controller
             //because section_student table has a composite PK
             //made of 'student_id'+'section_id'.
             $student->sections()->attach([$request->section_id => ['seen_date' => now()]]);
-            $success = true;
-            $response = "Section marked as seen.";
+
+            $idResponse = $id;
+            $response   = "Section marked as seen.";
 
         }catch(\Illuminate\Database\QueryException $e){
             $response = $e->getCode() === "23000" ? "This section was already marked as seen."
                                                   : "An error has occurred.";
         }
 
-        return response()->json([ "success" => $success,  
+        return response()->json([ "id" => $idResponse,  
                                   "message" => $response], );
     }
 
@@ -101,7 +102,9 @@ class StudentController extends Controller
         //Detach returns false if nothing could be deleted.
         $deleted = $student->sections()->detach($section->id);
 
-        return response()->json(["success" => $deleted > 0,
+        $id = $deleted > 0  ? $section->id : null;
+
+        return response()->json(["id" => $id,
                                  "message" => $deleted > 0  ? "Section marked as not seen."
                                                             :  "Couldn't unmark section"]);
     }
