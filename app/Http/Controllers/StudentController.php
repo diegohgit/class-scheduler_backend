@@ -149,8 +149,14 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Student $student)
+    public function destroy(int $id)
     {
-        //
+        //THIS FUNCTION IS TO DELETE A STUDENT
+        //MAKE ANOTHER FUNCTION TO ONLY MARK AS IS_ACTIVE = 0
+        //$student_id = $student->id;
+
+        Student::where('id', $id)->update(['is_active' => 0]);
+
+        return response()->json(["id" => $id]);
     }
 }

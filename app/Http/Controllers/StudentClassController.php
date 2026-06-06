@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StudentClassRequest;
 use App\Http\Resources\StudentClassResource;
 use App\Models\StudentClass;
-use Illuminate\Http\Request;
 
 class StudentClassController extends Controller
 {
@@ -14,7 +13,11 @@ class StudentClassController extends Controller
      */
     public function index()
     {
-        $studentClasses = StudentClass::with(['student.color'])->get();
+        //Filter classes to get only classes of active students.
+        $studentClasses = StudentClass::with(['student.color'])
+                                        ->whereHas('student', 
+                                            fn ($q) => $q->where('is_active', 1))
+                                        ->get();
         return response()->json(StudentClassResource::collection($studentClasses));
     }
 
