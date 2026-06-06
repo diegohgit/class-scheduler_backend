@@ -21,6 +21,7 @@ class StudentController extends Controller
         //runs a callback function wich runs the search function from model
         //if 'search' is not included, returns the full list of students.
         $students = Student::with(['level', 'color'])
+                            ->where('is_active', 1)
                             ->when( $request->search,
                                     fn($q) => $q->searchByName($request->search))
                             ->get();
