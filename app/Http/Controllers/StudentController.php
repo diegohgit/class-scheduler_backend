@@ -35,9 +35,9 @@ class StudentController extends Controller
     public function store(StudentRequest $request)
     {
         $validated = $request->validated();
-        Student::create($validated);
+        $student = Student::create($validated);
 
-        return response()->json(['success' => true], 201);
+        return response()->json($student, 201);
     }
 
 
@@ -138,7 +138,11 @@ class StudentController extends Controller
         //Update with validated data.
         $student->update($validated);
 
-        return response()->json(['success' => true], 200);
+        //Add fresh() because in some cases laravel doesn't
+        //return data completely updated.
+        $updStudent = new StudentResource($student->fresh());
+
+        return response()->json($updStudent, 200);
     }
 
     /**
