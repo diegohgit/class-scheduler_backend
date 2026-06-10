@@ -116,6 +116,9 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
+        //Return error 404 in case the student were is_active = 0.
+        if(!$student->is_active) abort(404);
+
         $student->load(['level', 'color']);
 
         return new StudentResource($student);
@@ -149,14 +152,18 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(Student $student)
     {
-        //THIS FUNCTION IS TO DELETE A STUDENT
-        //MAKE ANOTHER FUNCTION TO ONLY MARK AS IS_ACTIVE = 0
-        //$student_id = $student->id;
+        //Switch is_active to 0 and delete all student's classes
+        DB::transaction(function () use ($student) {
 
-        Student::where('id', $id)->update(['is_active' => 0]);
+           $student->update([
+                'is_active' => 0
+            ]);
 
-        return response()->json(["id" => $id]);
+            $student->studentClass()->delete();
+        });
+
+        return response()->json(["id" => $student->id]);
     }
 }

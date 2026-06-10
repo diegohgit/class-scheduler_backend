@@ -16,6 +16,7 @@ class Student extends Model
                             'progress',
                             'color_id',
                             'level_id',
+                            'is_active',
                         ];
 
     //Use $casts to convert database values into specific types
