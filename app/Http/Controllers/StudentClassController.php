@@ -80,6 +80,8 @@ class StudentClassController extends Controller
      */
     public function destroy(StudentClass $studentClass)
     {
-        //
+        $studentClass->delete();
+
+        return response()->json($studentClass);
     }
 }
