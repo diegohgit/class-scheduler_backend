@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StudentClassRequest;
 use App\Http\Resources\StudentClassResource;
 use App\Models\StudentClass;
+use Illuminate\Support\Facades\DB;
 
 class StudentClassController extends Controller
 {
@@ -14,10 +15,11 @@ class StudentClassController extends Controller
     public function index()
     {
         //Filter classes to get only classes of active students.
-        $studentClasses = StudentClass::with(['student.color'])
+        $studentClasses = StudentClass::with('days')
                                         ->whereHas('student', 
                                             fn ($q) => $q->where('is_active', 1))
                                         ->get();
+
         return response()->json(StudentClassResource::collection($studentClasses));
     }
 
@@ -34,12 +36,21 @@ class StudentClassController extends Controller
      */
     public function store(StudentClassRequest $request)
     {
-        $studentClass = StudentClass::create($request->validated());
+        $validated = $request->validated();
 
-        //Add student info to response.
-        $response = new StudentClassResource($studentClass->load('student'));
+        $class = DB::transaction(function () use($validated) {
+            $studentClass = StudentClass::create([
+                'student_id' => $validated['student_id'],
+                'starts'     => $validated['starts'],
+                'ends'       => $validated['ends'],
+            ]);
 
-        return response()->json($response, 201);
+            $studentClass->days()->attach($validated['days_ids']);
+
+            return $studentClass;
+        });
+
+        return response()->json(['id' => $class->id], 201);
     }
 
 
@@ -62,17 +73,24 @@ class StudentClassController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StudentClassRequest $request, int $id)
+    public function update(StudentClassRequest $request)
     {
         $validated = $request->validated();
 
-        $studentClass = StudentClass::findOrFail($id);
-        $studentClass->update($validated);
+        $class = DB::transaction(function () use($validated){
 
-        //Add student info to response.
-        $response = new StudentClassResource($studentClass->load('student'));
+            $studentClass = StudentClass::findOrFail($validated['id']);
+            
+            $studentClass->update(['student_id' => $validated['student_id'],
+                            'starts'     => $validated['starts'],
+                            'ends'       => $validated['ends'],]);
 
-        return response()->json($response, 200);
+            $studentClass->days()->sync($validated['days_ids']);
+
+            return $studentClass;
+        });
+
+        return response()->json(['id' => $class->id], 200);
     }
 
     /**

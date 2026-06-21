@@ -19,9 +19,12 @@ class StudentClassResource extends JsonResource
             'student_id' => $this->student->id,
             'student'    => $this->student->name,
             'color'      => $this->student->color->name,
-            'day_id'     => $this->day_id,
             'starts'     => $this->starts->format('H:i'),
             'ends'       => $this->ends->format('H:i'),
+
+            //days return multiple days, 
+            //with map we can convert them to an array of arrays.
+            'days' => $this->days->map->only(['id', 'name']),
         ];
     }
 }
