@@ -1,7 +1,6 @@
 <?php 
 namespace App\Http\Requests;
 
-use App\Models\StudentClass;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StudentClassRequest extends FormRequest{
@@ -10,33 +9,34 @@ class StudentClassRequest extends FormRequest{
 
     public function rules(){
         return [
+            'id'         => 'nullable|integer|gt:0',
             'student_id' => 'required|integer|gt:0',
-            'day_id'     => 'required|integer|gt:0|max:7',
+            'days_ids'   => 'required|array',
             'starts'     => 'required|date_format:H:i',
             'ends'       => 'required|date_format:H:i',
         ];
     }
 
-    public function withValidator($validator){
-        //If the rules validation fails, stop execution.
-        if($validator->fails()) return;
+    // public function withValidator($validator){
+    //     //If the rules validation fails, stop execution.
+    //     if($validator->fails()) return;
 
-        //This callback will be executed after the rules validation.
-        $validator->after(function($v){
+    //     //This callback will be executed after the rules validation.
+    //     $validator->after(function($v){
 
-            $id = $this->route('student_class');
+    //         $id = $this->route('student_class');
 
-            $v = StudentClass::validateNoOverlap(
-                $this->day_id,
-                $this->starts,
-                $this->ends,
-                $id
-            );
+    //         $v = StudentClass::validateNoOverlap(
+    //             //$this->day_id,
+    //             $this->starts,
+    //             $this->ends,
+    //             $id
+    //         );
 
-            if(!$v){
-                $v->errors()->add('overlap', $v);
-            }
-        });
-    }
+    //         if(!$v){
+    //             $v->errors()->add('overlap', $v);
+    //         }
+    //     });
+    // }
 }
 ?>
