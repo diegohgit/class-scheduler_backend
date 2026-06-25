@@ -1,6 +1,7 @@
 <?php 
 namespace App\Http\Requests;
 
+use App\Models\StudentClass;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StudentClassRequest extends FormRequest{
@@ -17,26 +18,26 @@ class StudentClassRequest extends FormRequest{
         ];
     }
 
-    // public function withValidator($validator){
-    //     //If the rules validation fails, stop execution.
-    //     if($validator->fails()) return;
+    public function withValidator($validator){
+        //If the rules validation fails, stop execution.
+        if($validator->fails()) return;
 
-    //     //This callback will be executed after the rules validation.
-    //     $validator->after(function($v){
+        //This callback will be executed after the rules validation.
+        $validator->after(function($v){
 
-    //         $id = $this->route('student_class');
+            $id = $this->route('student_class');
 
-    //         $v = StudentClass::validateNoOverlap(
-    //             //$this->day_id,
-    //             $this->starts,
-    //             $this->ends,
-    //             $id
-    //         );
+            $v = StudentClass::validateNoOverlap(
+                    $this->days_ids,
+                    $this->starts,
+                    $this->ends,
+                    $id
+            );
 
-    //         if(!$v){
-    //             $v->errors()->add('overlap', $v);
-    //         }
-    //     });
-    // }
+            if(!$v){
+                $v->errors()->add('overlap', $v);
+            }
+        });
+    }
 }
 ?>
