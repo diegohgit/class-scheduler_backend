@@ -50,7 +50,10 @@ class StudentClassController extends Controller
             return $studentClass;
         });
 
-        return response()->json(['id' => $class->id], 201);
+        //Add array of days scheduled to response.
+        $response = new StudentClassResource($class->load('days'));
+
+        return response()->json($response, 201);
     }
 
 
@@ -80,7 +83,7 @@ class StudentClassController extends Controller
         $class = DB::transaction(function () use($validated){
 
             $studentClass = StudentClass::findOrFail($validated['id']);
-            
+
             $studentClass->update(['student_id' => $validated['student_id'],
                             'starts'     => $validated['starts'],
                             'ends'       => $validated['ends'],]);
@@ -90,7 +93,10 @@ class StudentClassController extends Controller
             return $studentClass;
         });
 
-        return response()->json(['id' => $class->id], 200);
+        //Add array of days scheduled to response.
+        $response = new StudentClassResource($class->load('days'));
+
+        return response()->json($response, 200);
     }
 
     /**
