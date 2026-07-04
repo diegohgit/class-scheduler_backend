@@ -20,20 +20,23 @@ class StudentResource extends JsonResource
                 'id'    => $this->id,
                 'name'  => $this->name,
                 'level' => $this->level->name,
+                'class_notes'      => $this->class_notes,
+                'class_notes_date' => $this->class_notes_date,
             ];
         }
 
         //the other case is students.show and it need more information
         return [
-            'id'   => $this->id,
-            'name' => $this->name,
+            'id'        => $this->id,
+            'name'      => $this->name,
             'birthdate' => $this->birthdate?->format('m/d/Y'),
-            'homework'  => $this->homework,
             'progress'  => $this->progress,
+            'class_notes'      => $this->class_notes,
+            'class_notes_date' => $this->class_notes_date?->format('m/d/Y'),
 
             'level' => ['id' => $this->level->id,
                         'name' => $this->level->name,],
-            
+
             'color' => ['id' => $this->color->id,
                         'name' => $this->color->name,],
         ];
