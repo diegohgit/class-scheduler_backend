@@ -50,8 +50,4 @@ class Student extends Model
     {
         return $this->belongsToMany(Section::class);
     }
-
-    public function scopeSearchByName($query, $name){
-        return $query->where('name', 'LIKE', "%{$name}%");
-    }
 }
