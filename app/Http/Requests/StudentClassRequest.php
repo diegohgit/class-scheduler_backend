@@ -15,7 +15,7 @@ class StudentClassRequest extends FormRequest{
             'days_ids'    => 'required|array',
             'starts'      => 'required|date_format:H:i',
             'ends'        => 'required|date_format:H:i',
-            'class_notes' => 'string',
+            'class_notes' => 'nullable|string',
         ];
     }
 
