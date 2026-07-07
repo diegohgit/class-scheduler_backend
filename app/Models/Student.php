@@ -12,7 +12,8 @@ class Student extends Model
     protected $fillable = [ 'name',
                             'birthdate',
                             'phone',
-                            'homework',
+                            'class_notes',
+                            'class_notes_date',
                             'progress',
                             'color_id',
                             'level_id',
@@ -21,9 +22,10 @@ class Student extends Model
 
     //Use $casts to convert database values into specific types
     protected $casts =[
-        //in this case we convert birthdate to date (it comes from DB as String)
-        //and now we can give a format (the format is defined in StudentResource)
+        //Convert some fields to date (it comes from DB as String)
+        //so we can give a date format (the format is defined in StudentResource)
         'birthdate' => 'date',
+        'class_notes_date' => 'date',
     ];
 
     //This is to enforce eager loading

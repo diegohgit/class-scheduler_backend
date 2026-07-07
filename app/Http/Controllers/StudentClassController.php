@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StudentClassRequest;
 use App\Http\Resources\StudentClassResource;
+use App\Models\Student;
 use App\Models\StudentClass;
 use Illuminate\Support\Facades\DB;
 
@@ -39,6 +40,7 @@ class StudentClassController extends Controller
         $validated = $request->validated();
 
         $class = DB::transaction(function () use($validated) {
+            //Store class info.
             $studentClass = StudentClass::create([
                 'student_id' => $validated['student_id'],
                 'starts'     => $validated['starts'],
@@ -47,6 +49,13 @@ class StudentClassController extends Controller
 
             $studentClass->days()->attach($validated['days_ids']);
 
+            //Update class notes.
+            if(array_key_exists('class_notes', $validated)){
+
+                $this->updateClassNotes($validated['student_id'],
+                                        $validated['class_notes']);
+            }
+
             return $studentClass;
         });
 
@@ -54,6 +63,21 @@ class StudentClassController extends Controller
         $response = new StudentClassResource($class->load('days'));
 
         return response()->json($response, 201);
+    }
+
+
+
+    public function updateClassNotes(int $studentId, ?string $classNotes){
+        //If user erased class notes, class_notes_date will be updated to null.
+        $classNotesDate = $classNotes === null ? null : now();
+
+        $updated = Student::where('id', $studentId)
+                            ->update([  'class_notes'      => $classNotes,
+                                        'class_notes_date' => $classNotesDate]);
+
+        if(!$updated){
+            throw new \RuntimeException("Something went wrong.");
+        }
     }
 
 
@@ -82,13 +106,21 @@ class StudentClassController extends Controller
 
         $class = DB::transaction(function () use($validated){
 
+            //Update class info.
             $studentClass = StudentClass::findOrFail($validated['id']);
 
-            $studentClass->update(['student_id' => $validated['student_id'],
-                            'starts'     => $validated['starts'],
-                            'ends'       => $validated['ends'],]);
+            $studentClass->update([ 'student_id' => $validated['student_id'],
+                                    'starts'     => $validated['starts'],
+                                    'ends'       => $validated['ends'],]);
 
             $studentClass->days()->sync($validated['days_ids']);
+
+            //Update class notes.
+            if(array_key_exists('class_notes', $validated)){
+
+                $this->updateClassNotes($validated['student_id'],
+                                        $validated['class_notes']);
+            }
 
             return $studentClass;
         });
