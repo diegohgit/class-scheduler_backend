@@ -21,7 +21,7 @@ class StudentRequest extends FormRequest
                                                     'name',
                                                     'birthdate',
                                                     'phone',
-                                                    'homework',
+                                                    'class_notes',
                                                     'progress',
                                                     'color_id',
                                                     'level_id',
@@ -53,13 +53,13 @@ class StudentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'      => 'required|string|max:255',
-            'birthdate' => 'nullable|date',
-            'phone'     => 'nullable|string|max:50',
-            'homework'  => 'nullable|string|max:2000',
-            'progress'  => 'nullable|string|max:2000',
-            'color_id'  => 'required|integer|exists:colors,id',
-            'level_id'  => 'required|integer|exists:levels,id',
+            'name'        => 'required|string|max:255',
+            'birthdate'   => 'nullable|date',
+            'phone'       => 'nullable|string|max:50',
+            'class_notes' => 'nullable|string|max:2000',
+            'progress'    => 'nullable|string|max:2000',
+            'color_id'    => 'required|integer|exists:colors,id',
+            'level_id'    => 'required|integer|exists:levels,id',
         ];
     }
 
