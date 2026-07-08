@@ -21,7 +21,7 @@ class StudentResource extends JsonResource
                 'name'  => $this->name,
                 'level' => $this->level->name,
                 'class_notes'      => $this->class_notes,
-                'class_notes_date' => $this->class_notes_date,
+                'class_notes_date' => $this->class_notes_date?->format('m/d/Y'),
             ];
         }
 
