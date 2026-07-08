@@ -28,6 +28,22 @@ class Student extends Model
         'class_notes_date' => 'date',
     ];
 
+    //This function validates class_notes before store it.
+    //If class_notes is null stores, class_notes_date as null too.
+    //if class_notes has content, stores class_notes_date as today().
+    protected static function booted(){
+        static::saving(function ($student){
+
+            if(blank($student->class_notes)){
+                $student->class_notes      = null;
+                $student->class_notes_date = null;
+
+            }else{
+                $student->class_notes_date = today();
+            }
+        });
+    }
+
     //This is to enforce eager loading
     protected $with = ['level', 'color'];
 
