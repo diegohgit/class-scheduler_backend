@@ -12,13 +12,13 @@ class Student extends Model
     protected $fillable = [ 'name',
                             'birthdate',
                             'phone',
+                            'email',
                             'class_notes',
                             'class_notes_date',
                             'progress',
                             'color_id',
                             'level_id',
-                            'is_active',
-                        ];
+                            'is_active',];
 
     //Use $casts to convert database values into specific types
     protected $casts =[
