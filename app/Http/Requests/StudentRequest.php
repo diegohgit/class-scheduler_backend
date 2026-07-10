@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StudentRequest extends FormRequest
 {
@@ -21,6 +22,7 @@ class StudentRequest extends FormRequest
                                                     'name',
                                                     'birthdate',
                                                     'phone',
+                                                    'email',
                                                     'class_notes',
                                                     'progress',
                                                     'color_id',
@@ -52,6 +54,12 @@ class StudentRequest extends FormRequest
      */
     public function rules(): array
     {
+        //Get student id from url.
+        $studentId = $this->route('student');
+
+        //email:rfc,dns = Standard email checks basic formatting. 
+        //Adding :rfc,dns uses RFC compliance logic and performs 
+        //a quick DNS lookup to verify the email domain actually exists.
         return [
             'name'        => 'required|string|max:255',
             'birthdate'   => 'nullable|date',
@@ -60,6 +68,11 @@ class StudentRequest extends FormRequest
             'progress'    => 'nullable|string|max:2000',
             'color_id'    => 'required|integer|exists:colors,id',
             'level_id'    => 'required|integer|exists:levels,id',
+            'email'       => [  'nullable',
+                                'string',
+                                'max:70',
+                                'email:rfc,dns',
+                                Rule::unique('students', 'email')->ignore($studentId)],
         ];
     }
 
