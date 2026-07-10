@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StudentRequest;
-use App\Http\Resources\StudentCollection;
-use App\Http\Resources\StudentResource;
+use App\Http\Resources\StudentIndexResource;
+use App\Http\Resources\StudentShowResource;
 use App\Models\Section;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -15,16 +15,13 @@ class StudentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        //When $request contains 'search'
-        //runs a callback function wich runs the search function from model
-        //if 'search' is not included, returns the full list of students.
         $students = Student::with(['level', 'color'])
                             ->where('is_active', 1)
                             ->get();
 
-        return new StudentCollection($students);
+        return response()->json(StudentIndexResource::collection($students));
     }
 
 
@@ -34,13 +31,15 @@ class StudentController extends Controller
     public function store(StudentRequest $request)
     {
         $validated = $request->validated();
-        $student = Student::create($validated);
+        $student   = Student::create($validated);
 
-        return response()->json($student, 201);
+        return response()->json(new StudentIndexResource($student));
     }
 
 
-
+    /**
+     * Function used to mark a section as seen.
+     */
     public function markSection(Request $request, int $id){
 
         $idResponse = false;
@@ -55,7 +54,7 @@ class StudentController extends Controller
             else throw new \Exception("Incorrect data.");
 
             //Attach() doesn't validate whether the student_id-section_id
-            //already exists, but if it does it'll trigger an error/
+            //already exists, but if it does, it'll trigger an error
             //because section_student table has a composite PK
             //made of 'student_id'+'section_id'.
             $student->sections()->attach([$request->section_id => ['seen_date' => now()]]);
@@ -119,7 +118,7 @@ class StudentController extends Controller
 
         $student->load(['level', 'color']);
 
-        return new StudentResource($student);
+        return response()->json(new StudentShowResource($student));
     }
 
     /**
@@ -136,13 +135,13 @@ class StudentController extends Controller
     public function update(StudentRequest $request, int $id)
     {
         $validated = $request->validated();
-        $student = Student::findOrFail($id);
+        $student   = Student::findOrFail($id);
         //Update with validated data.
         $student->update($validated);
 
         //Add fresh() because in some cases laravel doesn't
         //return data completely updated.
-        $updStudent = new StudentResource($student->fresh());
+        $updStudent = new StudentShowResource($student->fresh());
 
         return response()->json($updStudent, 200);
     }
