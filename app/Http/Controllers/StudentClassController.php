@@ -19,6 +19,7 @@ class StudentClassController extends Controller
         $studentClasses = StudentClass::with('days')
                                         ->whereHas('student', 
                                             fn ($q) => $q->where('is_active', 1))
+                                        ->orderBy('starts')
                                         ->get();
 
         return response()->json(StudentClassResource::collection($studentClasses));
