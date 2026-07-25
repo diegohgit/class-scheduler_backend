@@ -17,7 +17,8 @@ class StudentClassResource extends JsonResource
         return [
             'id'         => $this->id,
             'student_id' => $this->student->id,
-            'student'    => $this->student->name,
+            'first_name' => $this->student->first_name,
+            'last_name'  => $this->student->last_name ,
             'color'      => $this->student->color->name,
             'starts'     => $this->starts->format('H:i'),
             'ends'       => $this->ends->format('H:i'),

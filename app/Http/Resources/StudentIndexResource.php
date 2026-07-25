@@ -16,10 +16,11 @@ class StudentIndexResource extends JsonResource
     {
         //Return only necessary information to show in a table or list.
         return [
-            'id'    => $this->id,
-            'name'  => $this->name,
-            'level' => $this->level->name,
-            'class_notes'      => $this->class_notes,
+            'id'          => $this->id,
+            'first_name'  => $this->first_name,
+            'last_name'   => $this->last_name,
+            'level'       => $this->level->name,
+            'class_notes' => $this->class_notes,
             'class_notes_date' => $this->class_notes_date?->format('m/d/Y'),
         ];
     }
