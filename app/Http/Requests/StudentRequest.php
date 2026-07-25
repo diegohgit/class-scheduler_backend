@@ -18,16 +18,15 @@ class StudentRequest extends FormRequest
     public function prepareForValidation(): void
     {
         //List of fields that are going to be sanitized.
-        $this->merge($this->sanitize($this->only([
-                                                    'name',
-                                                    'birthdate',
-                                                    'phone',
-                                                    'email',
-                                                    'class_notes',
-                                                    'progress',
-                                                    'color_id',
-                                                    'level_id',
-                                                ])));
+        $this->merge($this->sanitize($this->only(['first_name',
+                                                  'last_name',
+                                                  'birthdate',
+                                                  'phone',
+                                                  'email',
+                                                  'class_notes',
+                                                  'progress',
+                                                  'color_id',
+                                                  'level_id',])));
     }
 
     //Clean empty spaces from strings.
@@ -61,7 +60,8 @@ class StudentRequest extends FormRequest
         //Adding :rfc,dns uses RFC compliance logic and performs 
         //a quick DNS lookup to verify the email domain actually exists.
         return [
-            'name'        => 'required|string|max:255',
+            'first_name'  => 'required|string|max:255',
+            'last_name'   => 'nullable|string|max:255',
             'birthdate'   => 'nullable|date',
             'phone'       => 'nullable|string|max:50',
             'class_notes' => 'nullable|string|max:2000',
