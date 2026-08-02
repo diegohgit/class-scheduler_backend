@@ -12,8 +12,8 @@ class ChapterController extends Controller
      */
     public function index()
     {
-        //Get each chapter's section. Chapter_id is necessary so that Lavavel can associate
-        //sections with chapters.
+        //Get each chapter's section. Chapter_id is necessary 
+        //so that Lavavel can associate sections with chapters.
         $chapters = Chapter::with(['section:id,name,chapter_id'])
                              ->get(['id', 'name']);
         return $chapters;
