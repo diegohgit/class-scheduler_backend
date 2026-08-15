@@ -29,3 +29,6 @@ Route::middleware('auth:sanctum')->group(function () {
                     [StudentController::class, 'unmarkSection']
     );
 });
+
+Route::apiResource('/colors', ColorController::class);
+
