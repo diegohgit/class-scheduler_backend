@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\AuthController;
+#use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\SectionController;
@@ -32,5 +32,5 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::apiResource('/colors', ColorController::class);
-Route::post('/login',  [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
+#Route::post('/login',  [AuthController::class, 'login']);
+#Route::post('/logout', [AuthController::class, 'logout']);
