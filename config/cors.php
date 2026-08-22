@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://diegomysite.com'],
+    'allowed_origins' => ['https://diegomysite.com','http://localhost:5174'],
 
     'allowed_origins_patterns' => [],
 
