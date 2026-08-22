@@ -2,6 +2,7 @@
 namespace App\Http\Requests;
 
 use App\Models\StudentClass;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StudentClassRequest extends FormRequest{
@@ -26,16 +27,34 @@ class StudentClassRequest extends FormRequest{
         //This callback will be executed after the rules validation.
         $validator->after(function($v){
 
+            //Validate class duration
+            $start = Carbon::createFromFormat('H:i', $this->starts);
+            $end   = Carbon::createFromFormat('H:i', $this->ends  );
+
+            //If class ends at midnight, add a day to take the
+            //midnight of the following day.
+            if ($this->ends === '00:00') $end->addDay();
+
+            if ($start->diffInMinutes($end) > 180
+                || $start->diffInMinutes($end) < 15) {
+                $v->errors()->add(
+                    'ends',
+                    'The class cannot last more than 3 hours or less than 15 minutes.'
+                );
+            }
+
+
+            //Validate no overlap
             $id = $this->route('student_class');
 
-            $v = StudentClass::validateNoOverlap(
-                    $this->days_ids,
-                    $this->starts,
-                    $this->ends,
-                    $id
-            );
+            $overlapResult = StudentClass::validateNoOverlap(
+                                $this->days_ids,
+                                $this->starts,
+                                $this->ends,
+                                $id
+                            );
 
-            if(!$v){
+            if(!$overlapResult){
                 $v->errors()->add('overlap', $v);
             }
         });
