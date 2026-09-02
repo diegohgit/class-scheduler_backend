@@ -1,5 +1,7 @@
 <?php
 #use App\Http\Controllers\AuthController;
+
+use App\Http\Controllers\ActiveHourController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\SectionController;
@@ -22,6 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //Route::apiResource('/colors', ColorController::class);
     Route::apiResource('/chapters', ChapterController::class);
     Route::apiResource('/sections', SectionController::class);
+    Route::apiResource('/active_hours', ActiveHourController::class);
 
     //Student progress routes.
     Route::get('/students/{student}/progress',  [StudentController::class, 'getProgress']);
@@ -31,6 +34,9 @@ Route::middleware('auth:sanctum')->group(function () {
     );
 });
 
+
+
+//This route remains as public just for testing purposes.
 Route::apiResource('/colors', ColorController::class);
 #Route::post('/login',  [AuthController::class, 'login']);
 #Route::post('/logout', [AuthController::class, 'logout']);
