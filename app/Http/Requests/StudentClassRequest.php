@@ -1,6 +1,7 @@
 <?php 
 namespace App\Http\Requests;
 
+use App\Models\ActiveHour;
 use App\Models\StudentClass;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
@@ -33,15 +34,32 @@ class StudentClassRequest extends FormRequest{
 
             //If class ends at midnight, add a day to take the
             //midnight of the following day.
-            if ($this->ends === '00:00') $end->addDay();
+            // if ($this->ends === '00:00') $end->addDay();
 
             if ($start->diffInMinutes($end) > 180
                 || $start->diffInMinutes($end) < 15) {
                 $v->errors()->add(
-                    'ends',
+                    'duration',
                     'The class cannot last more than 3 hours or less than 15 minutes.'
                 );
             }
+
+
+
+            //Validate that the selected time range is inside the ActiveHours range.
+            $activeHours = ActiveHour::find(1);
+
+            if($activeHours){
+
+                if( $start->lt($activeHours->from) || $end->gt($activeHours->until))
+                {
+                    $v->errors()->add(
+                        'inside',
+                        'This time range is outside the active hours.'
+                    );
+                }
+            }
+
 
 
             //Validate no overlap
