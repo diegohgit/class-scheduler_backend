@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ActiveHour;
+use App\Services\ActiveHoursService;
 use Illuminate\Http\Request;
 
 class ActiveHourController extends Controller
@@ -25,15 +26,18 @@ class ActiveHourController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, int $id)
+    public function update(ActiveHoursService $service, ActiveHour $activeHour, Request $request)
     {
-        //$id at the end is to tell Laravel to ignore it during the uniqueness check.
         $validated = $request->validate(['from'  => 'required|date_format:H:i',
                                          'until' => 'required|date_format:H:i',]);
 
-        $hours = ActiveHour::findOrFail($id);
-        $hours->update($validated);
+        //$service does some validations in /app/Services/ActiveHoursService
+        $service->update(
+                $activeHour,
+                $validated['from'],
+                $validated['until']
+            );
 
-        return response()->json($hours, 200);
+        return response()->json($activeHour->fresh(), 200);
     }
 }
