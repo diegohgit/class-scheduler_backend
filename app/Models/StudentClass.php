@@ -10,18 +10,9 @@ use Illuminate\Validation\ValidationException;
 
 class StudentClass extends Model
 {
-
     protected $fillable = [ 'student_id',
                             'starts',
                             'ends',];
-
-
-
-    //Add format H:i to time data because it returns 00:00:00 by default.
-    protected $casts = [
-        'starts' => 'datetime:H:i',
-        'ends'   => 'datetime:H:i',
-    ];
 
 
 

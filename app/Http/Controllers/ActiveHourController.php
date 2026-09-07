@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ActiveHourResource;
 use App\Models\ActiveHour;
 use App\Services\ActiveHoursService;
 use Illuminate\Http\Request;
 
 class ActiveHourController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //Get each chapter's section. Chapter_id is necessary 
+        //Get each chapter's section. Chapter_id is necessary
         //so that Lavavel can associate sections with chapters.
-        $hours = ActiveHour::get();
+        $hours = ActiveHour::findOrFail(1);
 
-        return $hours;
+        return response()->json(new ActiveHourResource($hours));
     }
 
 
@@ -28,8 +28,8 @@ class ActiveHourController extends Controller
      */
     public function update(ActiveHoursService $service, ActiveHour $activeHour, Request $request)
     {
-        $validated = $request->validate(['from'  => 'required|date_format:H:i',
-                                         'until' => 'required|date_format:H:i',]);
+        $validated = $request->validate(['from'  => 'required|date_format:H:i:s',
+                                         'until' => 'required|date_format:H:i:s',]);
 
         //$service does some validations in /app/Services/ActiveHoursService
         $service->update(

@@ -20,8 +20,8 @@ class StudentClassResource extends JsonResource
             'first_name' => $this->student->first_name,
             'last_name'  => $this->student->last_name ,
             'color'      => $this->student->color->name,
-            'starts'     => $this->starts->format('H:i'),
-            'ends'       => $this->ends->format('H:i'),
+            'starts'     => substr($this->starts, 0, 5),
+            'ends'       => substr($this->ends, 0, 5),
             'class_notes'      => $this->student->class_notes,
             'class_notes_date' => $this->student->class_notes_date?->format('m/d/Y'),
 

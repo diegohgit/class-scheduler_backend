@@ -15,8 +15,8 @@ class StudentClassRequest extends FormRequest{
             'id'          => 'nullable|integer|gt:0',
             'student_id'  => 'required|integer|gt:0',
             'days_ids'    => 'required|array',
-            'starts'      => 'required|date_format:H:i',
-            'ends'        => 'required|date_format:H:i',
+            'starts'      => 'required|date_format:H:i:s',
+            'ends'        => 'required|date_format:H:i:s',
             'class_notes' => 'nullable|string',
         ];
     }
@@ -29,8 +29,8 @@ class StudentClassRequest extends FormRequest{
         $validator->after(function($v){
 
             //Validate class duration
-            $start = Carbon::createFromFormat('H:i', $this->starts);
-            $end   = Carbon::createFromFormat('H:i', $this->ends  );
+            $start = Carbon::createFromFormat('H:i:s', $this->starts);
+            $end   = Carbon::createFromFormat('H:i:s', $this->ends  );
 
             //If class ends at midnight, add a day to take the
             //midnight of the following day.
