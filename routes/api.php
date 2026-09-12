@@ -4,6 +4,8 @@
 use App\Http\Controllers\ActiveHourController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ColorController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\StudentClassController;
 use App\Http\Controllers\StudentController;
@@ -38,5 +40,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 //This route remains as public just for testing purposes.
 Route::apiResource('/colors', ColorController::class);
-#Route::post('/login',  [AuthController::class, 'login']);
-#Route::post('/logout', [AuthController::class, 'logout']);
+
+Route::post('/auth/forgot-password', [ForgotPasswordController::class, 'store'])
+    ->middleware('throttle:6,1');
+
+Route::post('/auth/reset-password', [ResetPasswordController::class, 'store']);
