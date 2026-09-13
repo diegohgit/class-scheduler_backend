@@ -28,6 +28,12 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+//WITHAOUT THIS IT STILL WORKS IN LOCAL
+//WITHAOUT THIS IT STILL WORKS IN LOCAL
+//WITHAOUT THIS IT STILL WORKS IN LOCAL
+
+    'frontend_url' => env('FRONTEND_URL', ),
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
