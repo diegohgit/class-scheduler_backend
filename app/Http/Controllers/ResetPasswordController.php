@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Password as PasswordRules;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -15,7 +16,11 @@ class ResetPasswordController extends Controller
         $request->validate([
             'token' => 'required|string',
             'email' => 'required|email',
-            'password' => 'required|confirmed|min:6'
+            'password' => ['required', 'confirmed',
+                            PasswordRules::min(8)
+                                        ->mixedCase()
+                                        ->numbers()
+                                        ->symbols()],
         ]);
 
         $status = Password::reset(
@@ -26,8 +31,8 @@ class ResetPasswordController extends Controller
                             'password_confirmation',
                             'token'),
 
-            function ($user, $password){
-                //Ignore the $fillable safety rules.
+            function($user, $password){
+                //forceFill() is to ignore the $fillable safety rules.
                 $user->forceFill([
                     'password' => Hash::make($password),
                     'remember_token' => Str::random(60),
