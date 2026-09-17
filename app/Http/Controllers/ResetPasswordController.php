@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ResetPasswordRequest;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -14,9 +14,11 @@ class ResetPasswordController extends Controller
 
         $validData = $request->validated();
 
+        $resetUser = null;
+
         $status = Password::reset(
             $validData,
-            function($user, $password){
+            function($user, $password) use (&$resetUser) {
                 //forceFill() is used to ignore the $fillable safety rules.
                 $user->forceFill([
                     'password' => Hash::make($password),
@@ -24,14 +26,18 @@ class ResetPasswordController extends Controller
                 ])->save();
 
                 $user->tokens()->delete();
+
+                $resetUser = $user;
             }
         );
-
-
 
         if($status !== Password::PASSWORD_RESET){
             return response()->json(['message' => __($status), ], 422);
         }
+
+        //Start user's session after resetting their password.
+        Auth::login($resetUser);
+        request()->session()->regenerate();
 
         return response()->json([
             'success' => true,
