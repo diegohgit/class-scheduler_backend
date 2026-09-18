@@ -35,7 +35,7 @@ class ResetPasswordNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         //Build url using token and user's email.
-        $url =  config('app.frontend_url')
+        $url =  config('app.frontend_url')//app.frontend_url is taken from confign/app.php
                 .'/reset-password?token='
                 .urlencode($this->token)
                 .'&email='
@@ -43,11 +43,11 @@ class ResetPasswordNotification extends Notification
 
         //Build email content.
         return (new MailMessage)
-            ->subject('Reset your password')
-            ->line('You are receiving this email because we received a password reset request for your account.')
-            ->action('Reset Password', $url)
-            ->line('This password reset link will expire soon')
-            ->line('If you did not request a password reset, no action is required.');
+            ->subject('Class Scheduler: Reset your password')
+            ->view('emails.reset-password',[
+                'url' => $url,
+                'user' => $notifiable
+            ]);
     }
 
     /**

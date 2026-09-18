@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Class Scheduler'),
 
     /*
     |--------------------------------------------------------------------------
@@ -28,10 +28,8 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
-//WITHAOUT THIS IT STILL WORKS IN LOCAL
-//WITHAOUT THIS IT STILL WORKS IN LOCAL
-//WITHAOUT THIS IT STILL WORKS IN LOCAL
-
+    //FRONTEND_URL must match its name with the one included in .env
+    //if its not included it must be created.
     'frontend_url' => env('FRONTEND_URL', ),
 
     /*
