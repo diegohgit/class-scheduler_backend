@@ -14,6 +14,16 @@ class ActiveHoursService{
         $parsedFrom  = Carbon::parse($from);
         $parsedUntil = Carbon::parse($until);
 
+        $untilCompare = $until;
+
+        //if $until === midnight
+        //Add a day to $parsedUntil so we can take the '00:00' time from the next day.
+        //Turn $untilCompare into '24:00:00' so we can compare orWhere('ends', '>', $untilCompare).
+        if($until === '00:00:00') {
+            $parsedUntil->addDay();
+            $untilCompare = '24:00:00';
+        }
+
         $totalHours = $parsedFrom->diffInMinutes($parsedUntil) / 60;
 
         if($totalHours < 3 || $totalHours > 24){
@@ -26,7 +36,7 @@ class ActiveHoursService{
 
         //Query to filter classes that are outside the selected time range.
         $outsideClasses = StudentClass::where('starts', '<', $from)
-                            ->orWhere('ends', '>', $until)
+                            ->orWhere('ends', '>', $untilCompare)
                             ->exists();
 
         if($outsideClasses){
