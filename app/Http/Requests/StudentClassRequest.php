@@ -30,14 +30,15 @@ class StudentClassRequest extends FormRequest{
 
             //Validate class duration
             $start = Carbon::createFromFormat('H:i:s', $this->starts);
-            $end   = Carbon::createFromFormat('H:i:s', $this->ends  );
+            $end   = Carbon::createFromFormat('H:i:s', $this->ends);
 
             //If class ends at midnight, add a day to take the
             //midnight of the following day.
-            // if ($this->ends === '00:00') $end->addDay();
+            if($this->ends === '00:00:00') $end->addDay();
 
-            if ($start->diffInMinutes($end) > 180
-                || $start->diffInMinutes($end) < 15) {
+            if($start->diffInMinutes($end) > 180
+               || $start->diffInMinutes($end) < 15) 
+            {
                 $v->errors()->add(
                     'duration',
                     'The class cannot last more than 3 hours or less than 15 minutes.'
@@ -50,8 +51,14 @@ class StudentClassRequest extends FormRequest{
             $activeHours = ActiveHour::find(1);
 
             if($activeHours){
+                $until = Carbon::createFromFormat('H:i:s', $activeHours->until);
+                $from  = Carbon::createFromFormat('H:i:s', $activeHours->from);
 
-                if( $start->lt($activeHours->from) || $end->gt($activeHours->until))
+                //If class $activeHours->until = midnight, add a day to take the
+                //midnight of the following day.
+                if($activeHours->until === '00:00:00') $until->addDay();
+
+                if( $start->lt($from) || $end->gt($until))
                 {
                     $v->errors()->add(
                         'inside',
