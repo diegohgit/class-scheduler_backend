@@ -28,13 +28,19 @@ class SectionController extends Controller
      */
     public function store(Request $request)
     {
-        //This validations must match with validations included in update() method
-        $validated = $request->validate([ 'name'       => 'required|max:150',
+        $validated = $request->validate([ 'name'   => 'required|array|min:1',
+                                          'name.*' => 'required|max:150',
                                           'chapter_id' => 'required|integer|exists:chapters,id',]);
 
-        $section = Section::create([ 'name'       => $validated['name'], 
-                                     'chapter_id' => $validated['chapter_id']]);
-        return response()->json($section);
+        //Insert each section and filter only id, name and chapter_id from response.
+        $sections = collect($validated['name'])
+            ->map(fn($section) => Section::create([
+                'name' => $section,
+                'chapter_id' => $validated['chapter_id']
+            ]))
+            ->map(fn($section) => $section->only(['id', 'name', 'chapter_id',]));
+
+        return response()->json(['success' => true, 'data' => $sections->values()], 201);
     }
 
     /**
