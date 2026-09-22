@@ -32,10 +32,20 @@ class ChapterController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([ 'name'=> 'required|max:150|unique:chapters,name' ]);
+        $validated = $request->validate([ 
+            'name' => 'required|array|min:1',
+            'name.*' => 'required|max:150|unique:chapters,name', 
+        ]);
 
-        $chapter = Chapter::create([ "name" => $validated['name'] ]);
-        return response()->json($chapter, 201);
+        //Insert each chapter and filter only id and name from response.
+        $chapters = collect($validated['name'])
+            ->map(fn($chapter) => Chapter::create([
+                'name' => $chapter
+            ]))
+            ->map(fn($chapter) => $chapter->only(['id', 'name']));
+
+        //Use values() to return every row inserted.
+        return response()->json(['success' => true, 'data' => $chapters->values()], 201);
     }
 
     /**
