@@ -38,6 +38,8 @@ class ActiveHourController extends Controller
                 $validated['until']
             );
 
-        return response()->json($activeHour->fresh(), 200);
+        $updActiveHrs = new ActiveHourResource($activeHour->fresh());
+
+        return response()->json($updActiveHrs, 200);
     }
 }
