@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Level extends Model
 {
+    public $timestamps = false;
+
     public function students(): HasMany
     {
         return $this->hasMany(Student::class);
