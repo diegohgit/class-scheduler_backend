@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Color extends Model
 {
-    //
+    public $timestamps = false;
+
     public function students(): HasMany
     {
         return $this->hasMany(Student::class);
