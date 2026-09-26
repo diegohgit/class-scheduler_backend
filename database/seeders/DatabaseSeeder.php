@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use Database\Seeders\ActiveHoursSeeder;
+use Database\Seeders\ColorsSeeder;
+use Database\Seeders\DaysSeeder;
+use Database\Seeders\LevelsSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,7 +18,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(ActiveHoursSeeder::class,
-                    DaysSeeder::class,);
+        $this->call([ActiveHoursSeeder::class,
+                    ColorsSeeder::class,
+                    DaysSeeder::class,
+                    LevelsSeeder::class,]);
     }
 }
