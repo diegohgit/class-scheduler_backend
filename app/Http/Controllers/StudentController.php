@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\StudentsExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\StudentRequest;
 use App\Http\Resources\StudentIndexResource;
 use App\Http\Resources\StudentShowResource;
@@ -162,5 +164,15 @@ class StudentController extends Controller
         });
 
         return response()->json(["id" => $student->id]);
+    }
+
+
+    //Export students list.
+    public function export()
+    {
+        return Excel::download(
+            new StudentsExport,
+                'students.xlsx'
+        );
     }
 }

@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
+    Route::get('/students/export', [StudentController::class, 'export']);
     Route::apiResource('/students', StudentController::class);
     Route::apiResource('/student_classes', StudentClassController::class);
     //Route::apiResource('/colors', ColorController::class);
