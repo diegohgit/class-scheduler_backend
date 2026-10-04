@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/students/export', [StudentController::class, 'export']);
     Route::apiResource('/students', StudentController::class);
     Route::apiResource('/student_classes', StudentClassController::class);
-    //Route::apiResource('/colors', ColorController::class);
+    //Route::get('/colors', [ColorController::class, 'index']);
     Route::apiResource('/chapters', ChapterController::class);
     Route::apiResource('/sections', SectionController::class);
     Route::apiResource('/active_hours', ActiveHourController::class);
@@ -40,7 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 //This route remains as public just for testing purposes.
-Route::apiResource('/colors', ColorController::class);
+Route::get('/colors', [ColorController::class, 'index']);
 
 Route::post('/auth/forgot-password', [ForgotPasswordController::class, 'store'])
     ->middleware('throttle:6,1');
