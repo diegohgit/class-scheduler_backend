@@ -107,6 +107,15 @@ class StudentClassController extends Controller
 
         $class = DB::transaction(function () use($validated){
 
+            $deleteId = $validated['delete_id'];
+
+            //Delete class in case user wants to merge days.
+            if($deleteId && $deleteId !== $validated['id']){
+    
+                $deleteClass = StudentClass::findOrFail($deleteId);
+                $deleteClass->delete();
+            }
+
             //Update class info.
             $studentClass = StudentClass::findOrFail($validated['id']);
 
