@@ -12,12 +12,13 @@ class StudentClassRequest extends FormRequest{
 
     public function rules(){
         return [
-            'id'          => 'nullable|integer|gt:0',
-            'student_id'  => 'required|integer|gt:0',
+            'id'          => 'nullable|integer|exists:student_classes,id',
+            'student_id'  => 'required|integer|exists:students,id',
             'days_ids'    => 'required|array',
             'starts'      => 'required|date_format:H:i:s',
-            'ends'        => 'required|date_format:H:i:s',
+            'ends'        => 'required|date_format:H:i:s|after:starts',
             'class_notes' => 'nullable|string',
+            'delete_id'   => 'nullable|integer|exists:student_classes,id',
         ];
     }
 
