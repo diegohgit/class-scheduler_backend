@@ -19,6 +19,7 @@ class StudentsExport implements FromQuery, WithHeadings, WithMapping, WithStyles
     public function query(): Builder
     {
         return Student::query()
+                ->where('is_active', 1)
                 ->orderBy('last_name')
                 ->orderBy('first_name');
     }

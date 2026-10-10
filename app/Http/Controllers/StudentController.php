@@ -170,6 +170,14 @@ class StudentController extends Controller
     //Export students list.
     public function export()
     {
+        //If there are no active students, don't generate the excel file.
+        if (!Student::where('is_active', 1)->exists()) {
+
+            return response()->json([
+                'message' => 'There are no active students to export.'
+            ], 404);
+        }
+
         return Excel::download(
             new StudentsExport,
                 'students.xlsx'
