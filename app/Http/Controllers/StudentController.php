@@ -78,11 +78,18 @@ class StudentController extends Controller
      * Filter students progress by student_id.
      */
     public function getProgress(int $id){
-        $data = DB::table('section_student')
+        $progress = DB::table('section_student')
                 ->where('student_id', $id)
                 ->get(['section_id', 'seen_date']);
 
-        return response()->json($data);
+        $student = DB::table('students')
+        ->where('id', $id)
+        ->first(['first_name', 'last_name']);
+
+        return response()->json([
+            'student'  => $student->first_name.' '.$student->last_name,
+            'progress' => $progress,
+        ]);
     }
 
 
