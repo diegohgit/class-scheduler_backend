@@ -38,14 +38,15 @@ class StudentsExport implements FromQuery, WithHeadings, WithMapping, WithStyles
 
     public function map($student): array
     {
+        $birthdate = $student->birthdate ? Carbon::parse($student->birthdate)
+                                         : null;
+
         return [$student->first_name,
                 $student->last_name,
                 $student->email,
                 $student->phone,
-                Date::dateTimeToExcel(
-                    Carbon::parse($student->birthdate)
-                ),
-                Carbon::parse($student->birthdate)->age,
+                $birthdate ? Date::dateTimeToExcel($birthdate) : null,
+                $birthdate ? $birthdate->age : null,
                 $student->level->name,
         ];
     }
