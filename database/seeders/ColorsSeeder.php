@@ -12,13 +12,13 @@ class ColorsSeeder extends Seeder
      */
     public function run(): void
     {
-        $colors = ['#f87171',
+        $colors = [ '#f87171',
                     '#fbbf24',
                     '#fde047',
                     '#bef264',
+                    '#34d399',
                     '#5eead4',
-                    '#67e8f9',
-                    '#3b82f6',
+                    '#60a5fa',
                     '#a5b4fc',
                     '#f0abfc',];
 
