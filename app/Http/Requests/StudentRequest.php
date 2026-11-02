@@ -56,18 +56,23 @@ class StudentRequest extends FormRequest
         //Get student id from url.
         $studentId = $this->route('student');
 
+        //If the method is not POST, then it's PATCH
+        //in PATCH requests, not every field is required,
+        //but if a 'sometimes|required' field is present, it cannot be empty.
+        $required = $this->isMethod('POST') ? 'required' : 'sometimes|required';
+
         //email:rfc,dns = Standard email checks basic formatting. 
         //Adding :rfc,dns uses RFC compliance logic and performs 
         //a quick DNS lookup to verify the email domain actually exists.
         return [
-            'first_name'  => 'required|string|max:255',
+            'first_name'  => "$required|string|max:255",
             'last_name'   => 'nullable|string|max:255',
             'birthdate'   => 'nullable|date',
             'phone'       => 'nullable|string|max:50',
             'class_notes' => 'nullable|string|max:2000',
             'progress'    => 'nullable|string|max:2000',
-            'color_id'    => 'required|integer|exists:colors,id',
-            'level_id'    => 'required|integer|exists:levels,id',
+            'color_id'    => "$required|integer|exists:colors,id",
+            'level_id'    => "$required|integer|exists:levels,id",
             'email'       => [  'nullable',
                                 'string',
                                 'max:70',

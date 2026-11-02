@@ -29,18 +29,22 @@ class Student extends Model
         'class_notes_date' => 'date',
     ];
 
-    //This function validates class_notes before store it.
-    //If class_notes is null stores, class_notes_date as null too.
-    //if class_notes has content, stores class_notes_date as today().
+    //Validate how class_notes and class_notes_date will be stored
+    //before inserting or updating it.
     protected static function booted(){
         static::saving(function ($student){
 
-            if(blank($student->class_notes)){
-                $student->class_notes      = null;
-                $student->class_notes_date = null;
+            //Compare if class_notes has changed in the current request
+            //compared to its database value.
+            if ($student->isDirty('class_notes')) {
 
-            }else{
-                $student->class_notes_date = today();
+                if(blank($student->class_notes)){
+                    $student->class_notes      = null;
+                    $student->class_notes_date = null;
+
+                }else{
+                    $student->class_notes_date = today();
+                }
             }
         });
     }
